@@ -7,6 +7,9 @@ export const contactNumberInput =
 export const deviceRadioInput =
   document.querySelector<HTMLInputElement>("#device-storage");
 
+export const SIMRadioInput =
+  document.querySelector<HTMLInputElement>("#SIM-storage");
+
 export const drawer = document.querySelector<HTMLButtonElement>("#drawer");
 
 export const contactListElement =

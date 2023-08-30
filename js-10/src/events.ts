@@ -1,3 +1,4 @@
+import { createListItem, validateFields } from "./functions.js";
 import {
   drawer,
   contactNameInput,
@@ -6,7 +7,7 @@ import {
   contactListElement,
 } from "./importer.js";
 import { contactList } from "./state.js";
-import { contactPropsType } from "./types";
+import { ContactInfoType, contactPropsType } from "./types";
 
 export const showDrawerEvent = () => {
   drawer?.classList.remove("bottom-[-100%]");
@@ -18,7 +19,18 @@ export const closeDrawerEvent = () => {
   drawer?.classList.remove("bottom-[0%]");
 };
 
+const validateCreateContact = (contactInfo: ContactInfoType) => {
+  if (!validateFields(contactInfo.contactName, contactInfo.contactNumber + "")) {
+    alert("fill all fields");
+    throw Error("fill all fields");
+  }
+};
+
 export const createContactEvent = () => {
+  validateCreateContact({
+    contactName: contactNameInput!.value,
+    contactNumber: contactNumberInput!.value,
+  });
   const newContacts: contactPropsType = {
     id: crypto.randomUUID(),
     contactName: contactNameInput?.value ?? "",
@@ -29,23 +41,11 @@ export const createContactEvent = () => {
 
   contactList.push(newContacts);
 
-  const listItem = document.createElement("li");
-
-  const contactNameElement = document.createElement("h2");
-  contactNameElement.innerText = newContacts.contactName;
-  contactNameElement.className = "text-lg font-extrabold text-gray-900";
-
-  const contactNumberElement = document.createElement("p");
-  contactNumberElement.innerText = newContacts.contactNumber.toString();
-  contactNumberElement.className = "text-md font-bold text-gray-600";
-
-  const contactStorageElement = document.createElement("p");
-  contactStorageElement.innerText = newContacts.storage;
-  contactStorageElement.className = "text-md font-bold text-gray-600";
-
-  listItem.appendChild(contactNameElement);
-  listItem.appendChild(contactNumberElement);
-  listItem.appendChild(contactStorageElement);
+  const listItem = createListItem({
+    contactName: newContacts.contactName,
+    contactNumber: newContacts.contactNumber,
+    // storage: newContacts.storage,
+  });
 
   contactListElement?.appendChild(listItem);
 };
